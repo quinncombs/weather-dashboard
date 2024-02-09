@@ -46,7 +46,7 @@ $(document).ready(function () {
  function weatherFunction(searchTerm) {
   $.ajax({
     type: 'GET',
-    url: 'https://api.openweathermap.org/data/2.5/weather?q='+ searchTerm + 'weatherApi',
+    url: 'https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}?q='+ searchTerm + weatherAPI
 
   }).then(function(data) {
     if (history.indexOf(searchTerm) === -1) {
@@ -65,5 +65,11 @@ $(document).ready(function () {
     console.log(data)
     var lon = data.coord.lon;
     var lat = data.coord.lat;
-  })
- }
+  });
+  //   $.ajax({
+  //     type: "GET",
+  //     url: "https://api.openweathermap.org/data/2.5/forecast?" + searchTerm + weatherAPI
+  // }).then(function (res) {
+  //   console.log(res)
+  // })
+}
