@@ -1,5 +1,6 @@
 // api key
-var weatherAPI = "dc7d077cf1588e1762da25544e1a984a";
+var requestUrl = 'https://api.openweathermap.org/data/2.5/weather?q='
+var weatherAPI = "&appid=dc7d077cf1588e1762da25544e1a984a";
 var currentCity = "";
 var lastCity = "";
 
@@ -32,16 +33,37 @@ $(document).ready(function () {
   for (var i = 0; i < history.length; i++) {
     createRow(history[i]);
   }
-
   function createRow(text) {
     var listItem = $("<li>").addClass("list-group-item").text(text);
     $(".history").append(listItem);
   }
-
   $(".history").on("click", "li", function () {
     weatherFunction($(this).text());
     getForecast($(this).text());
 
   });
 
- 
+ function weatherFunction(searchTerm) {
+  $.ajax({
+    type: 'GET',
+    url: 'https://api.openweathermap.org/data/2.5/weather?q='+ searchTerm + 'weatherApi',
+
+  }).then(function(data) {
+    if (history.indexOf(searchTerm) === -1) {
+      history.push(searchTerm);
+      localStorage.setItem("history", JSON.stringify(history));
+      createRow(searchTerm);
+    }
+    var title = $("<h3>").addClass("card-title").text(data.name + " (" + new Date().toLocaleDateString() + ")");
+    var img = $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
+    //creates card for each condition.
+    var card = $("<div>").addClass("card");
+    var cardBody = $("<div>").addClass("card-body");
+    var wind = $("<p>").addClass("card-text").text("Wind Speed: " + data.wind.speed + " MPH");
+    var humid = $("<p>").addClass("card-text").text("Humidity: " + data.main.humidity + " %");
+    var temp = $("<p>").addClass("card-text").text("Temperature: " + data.main.temp + " K");
+    console.log(data)
+    var lon = data.coord.lon;
+    var lat = data.coord.lat;
+  })
+ }
